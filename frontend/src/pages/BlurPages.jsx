@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import Layout from '../layouts/layout'
 import { gaussianBlurJS } from '../lib/blur';
 import { drawToCanvas } from '../helpers/drawToCanvas';
@@ -124,6 +124,9 @@ const BlurPages = () => {
 
         drawToCanvas(result, canvasWasmRef.current);
 
+        console.log(`WASM Blur Time: ${ time } ms`);
+        console.log(`WASM Peak Memory: ${ peakMemMB } MB`);
+
         return {
             time: time,
             result: result.data,
@@ -141,7 +144,7 @@ const BlurPages = () => {
             canvasOriginalRef={canvasOriginalRef}
             canvasJSRef={canvasJSRef}
             canvasWasmRef={canvasWasmRef}
-            handleProcessJs={processJS}
+            handleProcessJS={processJS}
             handleProcessWasm={processWasm}
         >
         </Layout>

@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import BackButton from '../components/BackButton'
+import { calculatePSNR } from '../helpers/calculatePSNR';
 
 const Layout = ({
     children,
@@ -15,12 +16,35 @@ const Layout = ({
 }) => {
 
     const [loading, setLoading] = useState(false)
+    const [psnrValue, setPsnrValue] = useState(null);
+    const [benchmarkTime, setBenchmarkTime] = useState([]);
+    const [benchmarkMemory, setBenchmarkMemory] = useState([]);
 
     const handleProcess = async () => {
         setLoading(true);
-        console.log("Processing...");
+        for (let i = 0; i < 1; i++) {
+            const wasmResult = await handleProcessWasm();
+            const jsResult = handleProcessJS();
+            setPsnrValue(calculatePSNR(jsResult.result, wasmResult.result).toFixed(2));
+            // console.log(calculatePSNR(jsResult.result, wasmResult.result).toFixed(2));
+            setBenchmarkTime(prev => [...prev, {
+                js: jsResult.time,
+                wasm: wasmResult.time,
+            }])
+            setBenchmarkMemory(prev => [...prev, {
+                js: jsResult.memory,
+                wasm: wasmResult.memory,
+            }])
+        }
+
         setLoading(false);
     }
+
+    useEffect(() => {
+        console.log('Benchmark Time:', benchmarkTime);
+        console.log('Benchmark Memory:', benchmarkMemory);
+    }
+        , [benchmarkMemory, benchmarkTime]);
 
     return (
         <div className={`p-4 max-w-full min-h-screen flex flex-col items-center justify-center mb-20 bg-gray-800  ${ loading ? 'pointer-events-none overflow-hidden' : '' }`}>
@@ -50,13 +74,13 @@ const Layout = ({
                             </div>
 
                         </div>
-                        {/* <div className="text-center mt-4">
+                        <div className="text-center mt-4">
                             <h3 className="text-2xl text-white mb-2">PSNR : {psnrValue}</h3>
-                        </div> */}
+                        </div>
                         <div className="mt-4 flex gap-4">
                             {/* <button onClick={processJS} className="bg-gray-800 text-white p-2 rounded-md">Blur with JS</button>
                                     <button onClick={processWasm} className="bg-gray-800 text-white p-2 rounded-md">Blur with WASM</button> */}
-                            <button onClick={async () =>await handleProcessWasm(canvasWasmRef)} className="bg-blue-500 hover:cursor-pointer hover:bg-blue-600 text-white p-2 rounded-md">Start Benchmark</button>
+                            <button onClick={async () => await handleProcess()} className="bg-blue-500 hover:cursor-pointer hover:bg-blue-600 text-white p-2 rounded-md">Start Benchmark</button>
                         </div>
                         {children}
                     </>
