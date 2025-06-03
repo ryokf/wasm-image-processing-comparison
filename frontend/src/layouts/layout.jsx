@@ -8,18 +8,19 @@ const Layout = ({
     handleUpload,
     file,
     canvasOriginalRef,
-    handleProcess,
+    handleProcessJS,
+    handleProcessWasm,
     canvasJSRef,
+    canvasWasmRef
 }) => {
 
     const [loading, setLoading] = useState(false)
-    const canvasWasmRef = useRef(null);
 
-    // const handleProcess = async () => {
-    //     setLoading(true);
-    //     console.log("Processing...");
-    //     setLoading(false);
-    // }
+    const handleProcess = async () => {
+        setLoading(true);
+        console.log("Processing...");
+        setLoading(false);
+    }
 
     return (
         <div className={`p-4 max-w-full min-h-screen flex flex-col items-center justify-center mb-20 bg-gray-800  ${ loading ? 'pointer-events-none overflow-hidden' : '' }`}>
@@ -55,7 +56,7 @@ const Layout = ({
                         <div className="mt-4 flex gap-4">
                             {/* <button onClick={processJS} className="bg-gray-800 text-white p-2 rounded-md">Blur with JS</button>
                                     <button onClick={processWasm} className="bg-gray-800 text-white p-2 rounded-md">Blur with WASM</button> */}
-                            <button onClick={() => handleProcess(canvasOriginalRef.current, canvasJSRef.current, canvasWasmRef.current)} className="bg-blue-500 hover:cursor-pointer hover:bg-blue-600 text-white p-2 rounded-md">Start Benchmark</button>
+                            <button onClick={async () =>await handleProcessWasm(canvasWasmRef)} className="bg-blue-500 hover:cursor-pointer hover:bg-blue-600 text-white p-2 rounded-md">Start Benchmark</button>
                         </div>
                         {children}
                     </>
