@@ -1,0 +1,15 @@
+{
+  "name": "wasm-image-processing-comparison",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "wasm_image_processing_comparison_bg.wasm",
+    "wasm_image_processing_comparison.js",
+    "wasm_image_processing_comparison.d.ts"
+  ],
+  "main": "wasm_image_processing_comparison.js",
+  "types": "wasm_image_processing_comparison.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
