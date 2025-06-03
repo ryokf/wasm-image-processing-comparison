@@ -1,9 +1,12 @@
 import React from 'react'
+import Layout from '../layouts/layout'
 
 const BlurPages = () => {
-  return (
-    <div>BlurPages</div>
-  )
+    return (
+        <Layout title={"Gaussian Blur: JS vs WASM"}>
+
+        </Layout>
+    )
 }
 
 export default BlurPages

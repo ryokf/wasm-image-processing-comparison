@@ -1,8 +1,11 @@
 import React from 'react'
+import Layout from '../layouts/layout'
 
 const GrayscalePages = () => {
   return (
-    <div>GrayscalePages</div>
+    <Layout title={"Grayscale: JS vs WASM"}>
+
+    </Layout>
   )
 }
 
