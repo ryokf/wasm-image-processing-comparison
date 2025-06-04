@@ -53,7 +53,7 @@ const Layout = ({
                 <h1 className="text-3xl text-white my-2">{title}</h1>
                 <p className="text-lg text-gray-400">{subtitle}</p>
             </div>
-            <input type="file" accept="image/*" onChange={handleUpload} className="mt-4 border border-gray-300 rounded-full text-white min-w-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+            <input type="file" accept="image/*" onChange={handleUpload} className="mt-4 border border-gray-300 rounded-full text-white min-w-xs lg:min-w-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
             {
                 file && (
                     <>
