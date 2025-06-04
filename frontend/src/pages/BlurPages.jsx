@@ -137,7 +137,7 @@ const BlurPages = () => {
 
     return (
         <Layout
-            title={"Gaussian Blur: JS vs WASM"}
+            title={"Gaussian Blur: JS vs WASM (Rust)"}
             subtitle={"Compare the performance of Gaussian Blur implemented in JavaScript and WebAssembly. This page allows you to test the speed and efficiency of both implementations on various image sizes."}
             handleUpload={handleUpload}
             file={file}

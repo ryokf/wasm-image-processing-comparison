@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import BackButton from '../components/BackButton'
 import { calculatePSNR } from '../helpers/calculatePSNR';
+import Result from '../components/Result';
 
 const Layout = ({
     children,
@@ -22,7 +23,7 @@ const Layout = ({
 
     const handleProcess = async () => {
         setLoading(true);
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 10; i++) {
             const wasmResult = await handleProcessWasm();
             const jsResult = handleProcessJS();
             setPsnrValue(calculatePSNR(jsResult.result, wasmResult.result).toFixed(2));
@@ -83,6 +84,29 @@ const Layout = ({
                             <button onClick={async () => await handleProcess()} className="bg-blue-500 hover:cursor-pointer hover:bg-blue-600 text-white p-2 rounded-md">Start Benchmark</button>
                         </div>
                         {children}
+                        <div className="grid grid-cols-2 gap-4 w-10/12 m-auto">
+                            {
+                                benchmarkMemory.length != 0 &&
+                                <Result
+                                    benchmarkData={benchmarkMemory}
+                                    setBenchmarkData={setBenchmarkMemory}
+                                    title="Benchmark Memory Usage"
+                                    subtitle="This chart shows the memory usage of both JS and WASM implementations during the Gaussian Blur operation."
+                                    unit="MB"
+                                >
+                                </Result>
+                            }
+                            {
+                                benchmarkTime.length != 0 &&
+                                <Result
+                                    benchmarkData={benchmarkTime}
+                                    setBenchmarkData={setBenchmarkTime}
+                                    title="Benchmark Execution Time"
+                                    subtitle="This chart shows the execution time of both JS and WASM implementations during the Gaussian Blur operation."
+                                    unit="ms"
+                                ></Result>
+                            }
+                        </div>
                     </>
                 )
             }
