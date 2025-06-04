@@ -2,7 +2,7 @@ const TableResult = ({ benchmarkData, unit }) => {
     console.log('TableResult benchmarkData:', benchmarkData);
 
     return (
-        <table className="table-auto w-11/12 m-auto mt-4 mb-8 text-white">
+        <table className="table-auto w-11/12 m-auto mt-4 text-white">
             <thead>
                 <tr>
                     <th className="px-4 py-2">Iteration</th>

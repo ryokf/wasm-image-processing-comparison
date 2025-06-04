@@ -48,7 +48,7 @@ const Layout = ({
         , [benchmarkMemory, benchmarkTime]);
 
     return (
-        <div className={`p-4 max-w-full min-h-screen flex flex-col items-center justify-center mb-20 bg-gray-800  ${ loading ? 'pointer-events-none overflow-hidden' : '' }`}>
+        <div className={`p-4 max-w-full min-h-screen flex flex-col items-center justify-center bg-gray-800  ${ loading ? 'pointer-events-none overflow-hidden' : '' }`}>
             <BackButton></BackButton>
             <div className="max-w-6xl my-8">
                 <h1 className="text-3xl text-white my-2">{title}</h1>
@@ -84,7 +84,7 @@ const Layout = ({
                             <button onClick={async () => await handleProcess()} className="bg-blue-500 hover:cursor-pointer hover:bg-blue-600 text-white p-2 rounded-md">Start Benchmark</button>
                         </div>
                         {children}
-                        <div className="grid grid-cols-2 gap-4 w-10/12 m-auto">
+                        <div className="grid grid-cols-2 gap-4 w-3/4 m-auto">
                             {
                                 benchmarkMemory.length != 0 &&
                                 <Result

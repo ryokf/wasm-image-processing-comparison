@@ -1,15 +1,16 @@
 import TableResult from './TableResult';
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
+import { RiResetLeftLine } from "react-icons/ri";
 
 const Result = ({benchmarkData, setBenchmarkData, title, subtitle, unit}) => {
     return (
-        <div className="my-20 p-4 pb-20 pt-10 border rounded-lg w-full border-white">
+        <div className="my-20 p-4 pb-10 pt-10 border rounded-lg w-full border-white">
             <div className="flex justify-between items-center mb-4 w-11/12 m-auto">
                 <div className="">
                     <h3 className="text-2xl mb-2 text-white">{title}</h3>
-                    <p className="text-sm text-gray-500 max-w-xl">{subtitle}</p>
+                    <p className="text-sm text-gray-500 max-w-lg">{subtitle}</p>
                 </div>
-                <button className="!bg-blue-500" onClick={() => setBenchmarkData([])}>reset</button>
+                <button className="!bg-blue-500 p-2 rounded text-white text-lg" onClick={() => setBenchmarkData([])}><RiResetLeftLine /></button>
             </div>
             <div className="w-full h-96">
                 <ResponsiveContainer width="100%" height="100%">
@@ -26,7 +27,7 @@ const Result = ({benchmarkData, setBenchmarkData, title, subtitle, unit}) => {
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis label={{ value: "Iterasi", position: "bottom" }} domain={[1, 10]} />
-                        <YAxis label={{ value: `${unit == "ms" ? "Waktu (ms)" : "Memori (MB)"}`, angle: -90, position: "left" }} domain={ unit == "ms" ? [0, 1500] : [0, 100] } />
+                        <YAxis label={{ value: `${unit == "ms" ? "Waktu (ms)" : "Memori (MB)"}`, angle: -90, position: "left" }} domain={ unit == "ms" ? [50, 1500] : [20, 100] } />
                         <Tooltip />
                         <Legend align="right" />
                         <Line type="monotone" dataKey="js" stroke="oklch(94.5% 0.129 101.54)" activeDot={{ r: 8 }} />
