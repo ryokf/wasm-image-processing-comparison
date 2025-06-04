@@ -4,7 +4,7 @@ import { RiResetLeftLine } from "react-icons/ri";
 
 const Result = ({benchmarkData, setBenchmarkData, title, subtitle, unit}) => {
     return (
-        <div className="my-20 p-4 pb-10 pt-10 border rounded-lg w-full border-white">
+        <div className="lg:my-20 my-8 p-4 pb-10 pt-10 border rounded-lg w-full border-white">
             <div className="flex justify-between items-center mb-4 w-11/12 m-auto">
                 <div className="">
                     <h3 className="text-2xl mb-2 text-white">{title}</h3>
