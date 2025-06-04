@@ -22,7 +22,7 @@ const Layout = ({
     const [benchmarkMemory, setBenchmarkMemory] = useState([]);
 
     const handleProcess = async () => {
-        setLoading(true);
+        await setLoading(true);
         for (let i = 0; i < 10; i++) {
             const wasmResult = await handleProcessWasm();
             const jsResult = handleProcessJS();
@@ -37,8 +37,7 @@ const Layout = ({
                 wasm: wasmResult.memory,
             }])
         }
-
-        setLoading(false);
+        await setLoading(false);
     }
 
     useEffect(() => {
@@ -81,10 +80,10 @@ const Layout = ({
                         <div className="mt-4 flex gap-4">
                             {/* <button onClick={processJS} className="bg-gray-800 text-white p-2 rounded-md">Blur with JS</button>
                                     <button onClick={processWasm} className="bg-gray-800 text-white p-2 rounded-md">Blur with WASM</button> */}
-                            <button onClick={async () => await handleProcess()} className="bg-blue-500 hover:cursor-pointer hover:bg-blue-600 text-white p-2 rounded-md">Start Benchmark</button>
+                            <button onClick={async () => await handleProcess()} className="bg-blue-500 hover:cursor-pointer hover:bg-blue-600 text-white p-2 rounded-md">{loading ? 'Processing...' : 'Start Benchmark'}</button>
                         </div>
                         {children}
-                        <div className="grid grid-cols-2 gap-4 w-3/4 m-auto">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-3/4 m-auto">
                             {
                                 benchmarkMemory.length != 0 &&
                                 <Result
