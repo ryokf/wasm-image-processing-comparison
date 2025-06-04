@@ -83,7 +83,7 @@ const Layout = ({
                             <button onClick={async () => await handleProcess()} className="bg-blue-500 hover:cursor-pointer hover:bg-blue-600 text-white p-2 rounded-md">{loading ? 'Processing...' : 'Start Benchmark'}</button>
                         </div>
                         {children}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-3/4 m-auto">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-11/12 lg:w-3/4  m-auto">
                             {
                                 benchmarkMemory.length != 0 &&
                                 <Result
