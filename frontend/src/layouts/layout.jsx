@@ -24,18 +24,18 @@ const Layout = ({
     const handleProcess = async () => {
         await setLoading(true);
         for (let i = 0; i < 10; i++) {
-            const wasmResult = await handleProcessWasm();
+            // const wasmResult = await handleProcessWasm();
             const jsResult = handleProcessJS();
-            setPsnrValue(calculatePSNR(jsResult.result, wasmResult.result).toFixed(2));
+            // setPsnrValue(calculatePSNR(jsResult.result, wasmResult.result).toFixed(2));
             // console.log(calculatePSNR(jsResult.result, wasmResult.result).toFixed(2));
-            setBenchmarkTime(prev => [...prev, {
-                js: jsResult.time,
-                wasm: wasmResult.time,
-            }])
-            setBenchmarkMemory(prev => [...prev, {
-                js: jsResult.memory,
-                wasm: wasmResult.memory,
-            }])
+            // setBenchmarkTime(prev => [...prev, {
+                // js: jsResult.time,
+                // wasm: wasmResult.time,
+            // }])
+            // setBenchmarkMemory(prev => [...prev, {
+                // js: jsResult.memory,
+                // wasm: wasmResult.memory,
+            // }])
         }
         await setLoading(false);
     }
@@ -84,7 +84,7 @@ const Layout = ({
                         </div>
                         {children}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full lg:w-3/4 m-auto">
-                            {
+                            {/* {
                                 benchmarkMemory.length != 0 &&
                                 <Result
                                     benchmarkData={benchmarkMemory}
@@ -104,7 +104,7 @@ const Layout = ({
                                     subtitle="This chart shows the execution time of both JS and WASM implementations during the Gaussian Blur operation."
                                     unit="ms"
                                 ></Result>
-                            }
+                            } */}
                         </div>
                     </>
                 )
