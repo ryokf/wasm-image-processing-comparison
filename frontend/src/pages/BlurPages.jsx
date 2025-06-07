@@ -49,7 +49,6 @@ const BlurPages = () => {
         const result = gaussianBlurJS(original, width, height);
         const end = performance.now();
 
-
         // const psnr = calculatePSNR(original.data, result.data);
         const time = (end - start).toFixed(2);
 

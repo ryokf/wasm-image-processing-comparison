@@ -1,14 +1,22 @@
 /* tslint:disable */
 /* eslint-disable */
 export function alloc(size: number): number;
+export function free(ptr: number, size: number): void;
 export function gaussian_blur(ptr: number, width: number, height: number): void;
+export function grayscale(ptr: number, width: number, height: number): void;
+export function edge_detection(ptr: number, width: number, height: number): void;
+export function get_allocated_memory_mb(): number;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly alloc: (a: number) => number;
+  readonly free: (a: number, b: number) => void;
   readonly gaussian_blur: (a: number, b: number, c: number) => void;
+  readonly grayscale: (a: number, b: number, c: number) => void;
+  readonly edge_detection: (a: number, b: number, c: number) => void;
+  readonly get_allocated_memory_mb: () => number;
   readonly __wbindgen_export_0: WebAssembly.Table;
   readonly __wbindgen_start: () => void;
 }

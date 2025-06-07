@@ -11,11 +11,45 @@ export function alloc(size) {
 
 /**
  * @param {number} ptr
+ * @param {number} size
+ */
+export function free(ptr, size) {
+    wasm.free(ptr, size);
+}
+
+/**
+ * @param {number} ptr
  * @param {number} width
  * @param {number} height
  */
 export function gaussian_blur(ptr, width, height) {
     wasm.gaussian_blur(ptr, width, height);
+}
+
+/**
+ * @param {number} ptr
+ * @param {number} width
+ * @param {number} height
+ */
+export function grayscale(ptr, width, height) {
+    wasm.grayscale(ptr, width, height);
+}
+
+/**
+ * @param {number} ptr
+ * @param {number} width
+ * @param {number} height
+ */
+export function edge_detection(ptr, width, height) {
+    wasm.edge_detection(ptr, width, height);
+}
+
+/**
+ * @returns {number}
+ */
+export function get_allocated_memory_mb() {
+    const ret = wasm.get_allocated_memory_mb();
+    return ret;
 }
 
 async function __wbg_load(module, imports) {

@@ -2,6 +2,8 @@ export function calculatePSNR(original, processed) {
     // const originalData = original.data;
     // const processedData = processed.data;
 
+    console.log(original, processed);
+
     if (original.length !== processed.length) {
         throw new Error("Ukuran gambar tidak sama!");
     }
