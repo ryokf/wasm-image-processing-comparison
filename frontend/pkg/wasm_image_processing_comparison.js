@@ -45,6 +45,15 @@ export function edge_detection(ptr, width, height) {
 }
 
 /**
+ * @param {number} ptr
+ * @param {number} width
+ * @param {number} height
+ */
+export function sepia(ptr, width, height) {
+    wasm.sepia(ptr, width, height);
+}
+
+/**
  * @returns {number}
  */
 export function get_allocated_memory_mb() {
