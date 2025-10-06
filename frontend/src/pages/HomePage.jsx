@@ -1,4 +1,5 @@
 import { Link } from "react-router"
+import BundleAnalysis from '../components/BundleAnalysis';
 
 function HomePage() {
 
@@ -13,6 +14,7 @@ function HomePage() {
                     <Link to="/blur" className='bg-blue-500 !text-white px-4 py-2 rounded-md hover:bg-blue-600 ml-4'>Gaussian Blur</Link>
                     <Link to="/edge-detection" className='bg-red-500 !text-white px-4 py-2 rounded-md hover:bg-red-600 ml-4'>Edge Detection</Link>
                 </div>
+                <BundleAnalysis></BundleAnalysis>
                 <div className='mt-8 text-center max-w-xl'>
                     <p className='text-sm text-gray-500'>Created by Ryo Khrisna Fitriawan</p>
                     <p className='text-sm text-gray-500'>This project is part of my research to demonstrate the performance difference between JavaScript and WebAssembly for image processing tasks</p>
