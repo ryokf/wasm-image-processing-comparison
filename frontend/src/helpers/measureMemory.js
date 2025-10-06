@@ -8,7 +8,7 @@ export function getBundleSize(implementation) {
       // Measure WASM bundle size
       fetch('/pkg/wasm_image_processing_comparison_bg.wasm')
         .then(response => {
-          const size = parseInt(response.headers.get('content-length')) / BYTES_TO_MB;
+          const size = parseInt(response.headers.get('content-length')) ;
           resolve(size);
         })
         .catch(() => resolve(null));
@@ -24,12 +24,12 @@ export function getBundleSize(implementation) {
           const size = parseInt(response.headers.get('content-length')) || 0;
           return acc + size;
         }, 0);
-        resolve(totalSize / BYTES_TO_MB);
+        resolve(totalSize );
       }).catch(() => {
         // If we can't fetch the files directly, try to get the JS chunk from the build
         fetch('/assets/index-*.js')
           .then(response => {
-            const size = parseInt(response.headers.get('content-length')) / BYTES_TO_MB;
+            const size = parseInt(response.headers.get('content-length')) ;
             resolve(size);
           })
           .catch(() => resolve(null));
