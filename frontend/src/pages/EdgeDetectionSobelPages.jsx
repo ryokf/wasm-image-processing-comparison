@@ -2,9 +2,9 @@ import { useRef, useState } from "react";
 import Layout from "../layouts/layout";
 import { drawToCanvas } from "../helpers/drawToCanvas";
 import __wbg_init from "../../pkg/wasm_image_processing_comparison";
-import { edgeDetectionJS } from "../lib/edgeDetection";
+import { edgeDetectionSobelJS } from "../lib/edgeDetectionSobel";
 
-const EdgeDetectionPages = () => {
+const EdgeDetectionSobelPages = () => {
     const [file, setFile] = useState(null);
     const [original, setOriginal] = useState(null);
     const canvasOriginalRef = useRef(null);
@@ -43,7 +43,7 @@ const EdgeDetectionPages = () => {
 
         const buffer = new Uint8ClampedArray(original.data.length);
         const t0 = performance.now();
-        const result = edgeDetectionJS(original, width, height, buffer);
+        const result = edgeDetectionSobelJS(original, width, height, buffer);
         const t1 = performance.now();
         drawToCanvas(result, canvasJSRef.current);
         clearInterval(memMonitor);
@@ -82,7 +82,7 @@ const EdgeDetectionPages = () => {
         }, 5);
 
         const t0 = performance.now();
-        wasm.edge_detection(ptr, width, height);
+        wasm.edge_detection_sobel(ptr, width, height);
         const t1 = performance.now();
         const output = new Uint8ClampedArray(
             wasm.memory.buffer,
@@ -117,4 +117,4 @@ const EdgeDetectionPages = () => {
     );
 };
 
-export default EdgeDetectionPages;
+export default EdgeDetectionSobelPages;
