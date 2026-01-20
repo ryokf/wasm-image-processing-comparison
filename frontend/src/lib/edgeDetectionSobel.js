@@ -1,3 +1,31 @@
+/**
+ * Calculate percentile-based threshold from an array of values.
+ * This is robust to outliers and adaptive to image content.
+ * 
+ * @param {number[]} values - Array of gradient magnitudes
+ * @param {number} percentile - Percentile value (0.0 to 1.0), e.g., 0.85 for 85th percentile
+ * @returns {number} Threshold value at the specified percentile
+ */
+function calculatePercentileThreshold(values, percentile) {
+    // Filter out zero values (background/flat regions)
+    const nonZero = values.filter(v => v > 0);
+
+    if (nonZero.length === 0) {
+        return 0; // All zeros, no edges
+    }
+
+    // Sort in ascending order
+    nonZero.sort((a, b) => a - b);
+
+    // Calculate percentile index (floor to match Rust behavior)
+    const index = Math.floor(nonZero.length * percentile);
+
+    // Clamp index to valid range
+    const clampedIndex = Math.min(index, nonZero.length - 1);
+
+    return nonZero[clampedIndex];
+}
+
 export function edgeDetectionSobelJS(imageData, width, height, dst) {
     const src = imageData.data;
     const w = width | 0;
@@ -7,8 +35,9 @@ export function edgeDetectionSobelJS(imageData, width, height, dst) {
     const out = dst ?? new Uint8ClampedArray(src.length);
     if (dst) out.fill(0);
 
-    // Threshold on squared magnitude, following the paper's traditional Sobel implementation (binary edge map)
-    const THRESHOLD_SQ = 4000;
+    // ADAPTIVE THRESHOLD: Use 85th percentile of gradient magnitudes
+    // This is robust to outliers and works well for images of any size
+    const PERCENTILE = 0.85;
 
     // Integer luminance approximation: (77R + 150G + 29B) >> 8  ≈ 0.299R + 0.587G + 0.114B
     const grayAt = (x, y) => {
@@ -16,10 +45,13 @@ export function edgeDetectionSobelJS(imageData, width, height, dst) {
         return ((77 * src[idx] + 150 * src[idx + 1] + 29 * src[idx + 2]) >> 8) | 0;
     };
 
+    // Step 1: Compute all gradient magnitudes (squared to avoid sqrt)
+    const magnitudes = [];
+
     // Traditional Sobel as defined in the paper:
     // f1 = p3 + 2*p6 + p9;  f2 = p1 + 2*p4 + p7;  Gx = f1 - f2
     // f3 = p1 + 2*p2 + p3;  f4 = p7 + 2*p8 + p9;  Gy = f4 - f3
-    // |G|^2 = Gx^2 + Gy^2  -> threshold -> binary edge (255 or 0)
+    // |G|^2 = Gx^2 + Gy^2
     for (let y = 1; y < h - 1; y++) {
         const y0 = y - 1, y1 = y, y2 = y + 1;
         for (let x = 1; x < w - 1; x++) {
@@ -45,6 +77,18 @@ export function edgeDetectionSobelJS(imageData, width, height, dst) {
             const gy = f4 - f3; // bottom - top (vertical gradient)
 
             const mag2 = gx * gx + gy * gy;
+            magnitudes.push(mag2);
+        }
+    }
+
+    // Step 2: Calculate adaptive threshold using percentile
+    const THRESHOLD_SQ = calculatePercentileThreshold(magnitudes, PERCENTILE);
+
+    // Step 3: Apply threshold to create binary edge map
+    let magIndex = 0;
+    for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+            const mag2 = magnitudes[magIndex++];
             const edge = mag2 >= THRESHOLD_SQ ? 255 : 0;
 
             const o = (y * w + x) * 4;

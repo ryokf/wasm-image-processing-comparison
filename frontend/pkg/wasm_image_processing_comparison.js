@@ -1,30 +1,5 @@
 let wasm;
 
-/**
- * Backward-compatible default: equivalent to JS `edgeDetectionCannySimple(..., { strength: 'medium' })`
- * @param {number} ptr
- * @param {number} width
- * @param {number} height
- */
-export function edge_detection_canny(ptr, width, height) {
-    wasm.edge_detection_canny(ptr, width, height);
-}
-
-/**
- * Config wrapper kept for compatibility. We map the legacy `sigma` to the closest preset:
- * sigma >= 1.8 -> 'low', sigma < 1.0 -> 'high', otherwise 'medium'.
- * Note: thresholds now follow the simplified method (fractions of max NMS), ignoring `high_percentile/low_ratio`.
- * @param {number} ptr
- * @param {number} width
- * @param {number} height
- * @param {number} _high_percentile
- * @param {number} _low_ratio
- * @param {number} sigma
- */
-export function edge_detection_canny_cfg(ptr, width, height, _high_percentile, _low_ratio, sigma) {
-    wasm.edge_detection_canny_cfg(ptr, width, height, _high_percentile, _low_ratio, sigma);
-}
-
 let WASM_VECTOR_LEN = 0;
 
 let cachedUint8ArrayMemory0 = null;
@@ -90,19 +65,6 @@ function passStringToWasm0(arg, malloc, realloc) {
     return ptr;
 }
 /**
- * New simple API: strength in {"low","medium","high"} — mirrors JS
- * @param {number} ptr
- * @param {number} width
- * @param {number} height
- * @param {string} strength
- */
-export function edge_detection_canny_strength(ptr, width, height, strength) {
-    const ptr0 = passStringToWasm0(strength, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    wasm.edge_detection_canny_strength(ptr, width, height, ptr0, len0);
-}
-
-/**
  * New API with stroke control: {"thin","medium","thick"}
  * @param {number} ptr
  * @param {number} width
@@ -119,12 +81,41 @@ export function edge_detection_canny_strength_stroke(ptr, width, height, strengt
 }
 
 /**
+ * Backward-compatible default: equivalent to JS `edgeDetectionCannySimple(..., { strength: 'medium' })`
  * @param {number} ptr
  * @param {number} width
  * @param {number} height
  */
-export function gaussian_blur(ptr, width, height) {
-    wasm.gaussian_blur(ptr, width, height);
+export function edge_detection_canny(ptr, width, height) {
+    wasm.edge_detection_canny(ptr, width, height);
+}
+
+/**
+ * New simple API: strength in {"low","medium","high"} — mirrors JS
+ * @param {number} ptr
+ * @param {number} width
+ * @param {number} height
+ * @param {string} strength
+ */
+export function edge_detection_canny_strength(ptr, width, height, strength) {
+    const ptr0 = passStringToWasm0(strength, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.edge_detection_canny_strength(ptr, width, height, ptr0, len0);
+}
+
+/**
+ * Config wrapper kept for compatibility. We map the legacy `sigma` to the closest preset:
+ * sigma >= 1.8 -> 'low', sigma < 1.0 -> 'high', otherwise 'medium'.
+ * Note: thresholds now follow the simplified method (fractions of max NMS), ignoring `high_percentile/low_ratio`.
+ * @param {number} ptr
+ * @param {number} width
+ * @param {number} height
+ * @param {number} _high_percentile
+ * @param {number} _low_ratio
+ * @param {number} sigma
+ */
+export function edge_detection_canny_cfg(ptr, width, height, _high_percentile, _low_ratio, sigma) {
+    wasm.edge_detection_canny_cfg(ptr, width, height, _high_percentile, _low_ratio, sigma);
 }
 
 /**
@@ -134,24 +125,6 @@ export function gaussian_blur(ptr, width, height) {
  */
 export function edge_detection_sobel(ptr, width, height) {
     wasm.edge_detection_sobel(ptr, width, height);
-}
-
-/**
- * @param {number} ptr
- * @param {number} width
- * @param {number} height
- */
-export function grayscale(ptr, width, height) {
-    wasm.grayscale(ptr, width, height);
-}
-
-/**
- * @param {number} size
- * @returns {number}
- */
-export function alloc(size) {
-    const ret = wasm.alloc(size);
-    return ret >>> 0;
 }
 
 /**
@@ -171,12 +144,39 @@ export function get_allocated_memory_mb() {
 }
 
 /**
+ * @param {number} size
+ * @returns {number}
+ */
+export function alloc(size) {
+    const ret = wasm.alloc(size);
+    return ret >>> 0;
+}
+
+/**
+ * @param {number} ptr
+ * @param {number} width
+ * @param {number} height
+ */
+export function grayscale(ptr, width, height) {
+    wasm.grayscale(ptr, width, height);
+}
+
+/**
  * @param {number} ptr
  * @param {number} width
  * @param {number} height
  */
 export function sepia(ptr, width, height) {
     wasm.sepia(ptr, width, height);
+}
+
+/**
+ * @param {number} ptr
+ * @param {number} width
+ * @param {number} height
+ */
+export function gaussian_blur(ptr, width, height) {
+    wasm.gaussian_blur(ptr, width, height);
 }
 
 async function __wbg_load(module, imports) {

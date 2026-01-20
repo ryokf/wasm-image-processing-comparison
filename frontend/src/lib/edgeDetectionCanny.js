@@ -17,7 +17,7 @@ export function edgeDetectionCannySimple(imageData, width, height, opts = {}) {
     const N = w * h;
 
     const strength = opts.strength ?? 'medium';
-    const { K, norm, highFrac, lowFrac } = kernelAndThresholdForStrength(strength);
+    const { K, norm, highPercentile, lowPercentile } = kernelAndThresholdForStrength(strength);
     const stroke = opts.stroke ?? 'medium'; // 'thin' | 'medium' | 'thick'
 
     // --- 1) RGBA -> Grayscale (Float32) ---
@@ -39,11 +39,10 @@ export function edgeDetectionCannySimple(imageData, width, height, opts = {}) {
     // --- 4) Non-Maximum Suppression (NMS klasik) ---
     const nms = nonMaximumSuppression(mag, dir, w, h);
 
-    // --- 5) Double threshold + hysteresis (pakai fraksi dari maksimum NMS) ---
-    let maxVal = 0;
-    for (let i = 0; i < nms.length; i++) if (nms[i] > maxVal) maxVal = nms[i];
-    const high = highFrac * maxVal;
-    const low = lowFrac * maxVal;
+    // --- 5) Double threshold + hysteresis (PERCENTILE-BASED, bukan max-based) ---
+    // PERUBAHAN: Gunakan percentile untuk robustness terhadap outlier
+    const high = calculatePercentileThreshold(nms, highPercentile);
+    const low = calculatePercentileThreshold(nms, lowPercentile);
 
     const edgeMask = doubleThresholdAndHysteresis(nms, w, h, high, low);
 
@@ -68,26 +67,58 @@ export const edgeDetectionCannyJS = edgeDetectionCannySimple;
 
 // ----------------- Helpers -----------------
 
+/**
+ * Calculate percentile-based threshold from an array of values.
+ * This is robust to outliers and adaptive to image content.
+ * Identical to Sobel implementation.
+ * 
+ * @param {Float32Array|Array} values - Array of NMS magnitudes
+ * @param {number} percentile - Percentile value (0.0 to 1.0)
+ * @returns {number} Threshold value at the specified percentile
+ */
+function calculatePercentileThreshold(values, percentile) {
+    // Filter out zero values (background/flat regions)
+    const nonZero = Array.from(values).filter(v => v > 0);
+
+    if (nonZero.length === 0) {
+        return 0; // All zeros, no edges
+    }
+
+    // Sort in ascending order
+    nonZero.sort((a, b) => a - b);
+
+    // Calculate percentile index (floor to match Rust behavior)
+    const index = Math.floor(nonZero.length * percentile);
+
+    // Clamp index to valid range
+    const clampedIndex = Math.min(index, nonZero.length - 1);
+
+    return nonZero[clampedIndex];
+}
+
 function kernelAndThresholdForStrength(strength) {
-    // Tiga preset sederhana:
+    // Tiga preset sederhana dengan PERCENTILE-BASED thresholds:
     // - 'low'   : blur lebih besar (7-tap), ambang lebih tinggi -> lebih bersih, detail berkurang
     // - 'medium': blur sedang (5-tap), ambang sedang
     // - 'high'  : blur ringan (3-tap), ambang lebih rendah -> lebih sensitif
+    //
+    // PERUBAHAN: Menggunakan percentile alih-alih fraksi dari max value
+    // Ini lebih robust terhadap outlier dan bekerja konsisten di berbagai ukuran gambar
     switch (strength) {
         case 'low':
             return {
                 K: [1, 6, 15, 20, 15, 6, 1], norm: 64.0,
-                highFrac: 0.25, lowFrac: 0.10
+                highPercentile: 0.90, lowPercentile: 0.75
             };
         case 'high':
             return {
                 K: [1, 2, 1], norm: 4.0,
-                highFrac: 0.15, lowFrac: 0.06
+                highPercentile: 0.80, lowPercentile: 0.65
             };
         default: // 'medium'
             return {
                 K: [1, 4, 6, 4, 1], norm: 16.0,
-                highFrac: 0.20, lowFrac: 0.08
+                highPercentile: 0.85, lowPercentile: 0.70
             };
     }
 }
@@ -215,8 +246,8 @@ function doubleThresholdAndHysteresis(nms, w, h, high, low) {
 function postThicken(mask, w, h, stroke) {
     switch (stroke) {
         case 'medium': return dilateBinary(mask, w, h, 1, 1); // ~3x3
-        case 'thick':  return dilateBinary(mask, w, h, 2, 1); // ~5x5
-        default:       return mask; // 'thin'
+        case 'thick': return dilateBinary(mask, w, h, 2, 1); // ~5x5
+        default: return mask; // 'thin'
     }
 }
 

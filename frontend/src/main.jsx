@@ -13,9 +13,9 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/blur" element={<BlurPages />} />
+        {/* <Route path="/blur" element={<BlurPages />} />
         <Route path="/grayscale" element={<GrayscalePages />} />
-        <Route path="/sepia" element={<SepiaPages />} />
+        <Route path="/sepia" element={<SepiaPages />} /> */}
         <Route path="/edge-detection-sobel" element={<EdgeDetectionSobelPages />} />
         <Route path="/edge-detection-canny" element={<EdgeDetectionCannyPages />} />
         <Route path="*" element={<div>404 Not Found</div>} />
